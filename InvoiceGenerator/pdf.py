@@ -145,7 +145,7 @@ class SimpleInvoice(BaseInvoice):
         self._drawTitle()
         self._drawProvider(self.TOP - 10, self.LEFT + 3)
         self._drawClient(self.TOP - 39, self.LEFT + 91)
-        self._drawPayment(self.TOP - 47, self.LEFT + 3)
+        # self._drawPayment(self.TOP - 47, self.LEFT + 3)
         self._drawQR(self.TOP - 39.4, self.LEFT + 61, 75.0)
         self._drawDates(self.TOP - 10, self.LEFT + 91)
         self._drawItems(self.TOP - 80, self.LEFT)
@@ -186,27 +186,27 @@ class SimpleInvoice(BaseInvoice):
         # Borders
         self.pdf.rect(
             self.LEFT * mm,
-            (self.TOP - 68) * mm,
+            (self.TOP - 43) * mm,
             (self.LEFT + 156) * mm,
-            65 * mm,
+            40 * mm,
             stroke=True,
             fill=False,
         )
 
         path = self.pdf.beginPath()
         path.moveTo((self.LEFT + 88) * mm, (self.TOP - 3) * mm)
-        path.lineTo((self.LEFT + 88) * mm, (self.TOP - 68) * mm)
+        path.lineTo((self.LEFT + 88) * mm, (self.TOP - 43) * mm)
         self.pdf.drawPath(path, True, True)
 
-        path = self.pdf.beginPath()
-        path.moveTo(self.LEFT * mm, (self.TOP - 39) * mm)
-        path.lineTo((self.LEFT + 88) * mm, (self.TOP - 39) * mm)
-        self.pdf.drawPath(path, True, True)
+        # path = self.pdf.beginPath()
+        # path.moveTo(self.LEFT * mm, (self.TOP - 39) * mm)
+        # path.lineTo((self.LEFT + 88) * mm, (self.TOP - 39) * mm)
+        # self.pdf.drawPath(path, True, True)
 
-        path = self.pdf.beginPath()
-        path.moveTo((self.LEFT + 88) * mm, (self.TOP - 27) * mm)
-        path.lineTo((self.LEFT + 176) * mm, (self.TOP - 27) * mm)
-        self.pdf.drawPath(path, True, True)
+        # path = self.pdf.beginPath()
+        # path.moveTo((self.LEFT + 88) * mm, (self.TOP - 27) * mm)
+        # path.lineTo((self.LEFT + 176) * mm, (self.TOP - 27) * mm)
+        # self.pdf.drawPath(path, True, True)
 
     def _drawAddress(self, top, left, width, height, header_string, address):
         self.pdf.setFont('DejaVu', 8)
@@ -233,10 +233,10 @@ class SimpleInvoice(BaseInvoice):
             self.pdf.drawImage(self.invoice.provider.logo_filename, (left + 84) * mm - width, (top - 4) * mm, width, height, mask="auto")
 
     def _drawClient(self, TOP, LEFT):
-        self._drawAddress(TOP, LEFT, 88, 41, _(u'Customer'), self.invoice.client)
+        self._drawAddress(TOP+24, LEFT, 88, 41, _(u'Customer'), self.invoice.client)
 
     def _drawProvider(self, TOP, LEFT):
-        self._drawAddress(TOP, LEFT, 88, 36, _(u'Provider'), self.invoice.provider)
+        self._drawAddress(TOP-5, LEFT, 88, 41, _(u'Provider'), self.invoice.provider)
 
     def _drawPayment(self, TOP, LEFT):
         self.pdf.setFont('DejaVu-Bold', 8)
@@ -291,12 +291,12 @@ class SimpleInvoice(BaseInvoice):
                 _(u'Total price'),
             )
             self.pdf.drawString(
-                (LEFT + 137) * mm,
+                (LEFT + 143) * mm,
                 (TOP - i) * mm,
                 _(u'Tax'),
             )
             self.pdf.drawString(
-                (LEFT + 146) * mm,
+                (LEFT + 158) * mm,
                 (TOP - i) * mm,
                 _(u'Total price with tax'),
             )
@@ -323,6 +323,7 @@ class SimpleInvoice(BaseInvoice):
 
     def _drawItems(self, TOP, LEFT):  # noqa
         # Items
+        TOP=TOP+30
         i = self._drawItemsHeader(TOP, LEFT)
         self.pdf.setFont('DejaVu', 7)
 
@@ -361,12 +362,12 @@ class SimpleInvoice(BaseInvoice):
             i -= 4.23
             if items_are_with_tax:
                 if float(int(item.count)) == item.count:
-                    self.pdf.drawRightString((LEFT + 85) * mm, (TOP - i) * mm, u'%s %s' % (locale.format("%i", item.count, grouping=True), item.unit))
+                    self.pdf.drawRightString((LEFT + 80) * mm, (TOP - i) * mm, u'%s %s' % (locale.format("%i", item.count, grouping=True), item.unit))
                 else:
-                    self.pdf.drawRightString((LEFT + 85) * mm, (TOP - i) * mm, u'%s %s' % (locale.format("%.2f", item.count, grouping=True), item.unit))
-                self.pdf.drawRightString((LEFT + 110) * mm, (TOP - i) * mm, currency(item.price, self.invoice.currency, self.invoice.currency_locale))
-                self.pdf.drawRightString((LEFT + 134) * mm, (TOP - i) * mm, currency(item.total, self.invoice.currency, self.invoice.currency_locale))
-                self.pdf.drawRightString((LEFT + 144) * mm, (TOP - i) * mm, '%.0f %%' % item.tax)
+                    self.pdf.drawRightString((LEFT + 80) * mm, (TOP - i) * mm, u'%s %s' % (locale.format("%.2f", item.count, grouping=True), item.unit))
+                self.pdf.drawRightString((LEFT + 102) * mm, (TOP - i) * mm, currency(item.price, self.invoice.currency, self.invoice.currency_locale))
+                self.pdf.drawRightString((LEFT + 128) * mm, (TOP - i) * mm, currency(item.total, self.invoice.currency, self.invoice.currency_locale))
+                self.pdf.drawRightString((LEFT + 148) * mm, (TOP - i) * mm, '%.0f %%' % item.tax)
                 self.pdf.drawRightString((LEFT + 173) * mm, (TOP - i) * mm, currency(item.total_tax, self.invoice.currency, self.invoice.currency_locale))
                 i += 5
             else:
@@ -423,11 +424,11 @@ class SimpleInvoice(BaseInvoice):
             text.textLines(tax_list)
             self.pdf.drawText(text)
 
-            text = self.pdf.beginText((LEFT + 27) * mm, (TOP - i - 5) * mm)
+            text = self.pdf.beginText((LEFT + 32) * mm, (TOP - i - 5) * mm)
             text.textLines(total_list)
             self.pdf.drawText(text)
 
-            text = self.pdf.beginText((LEFT + 45) * mm, (TOP - i - 5) * mm)
+            text = self.pdf.beginText((LEFT + 50) * mm, (TOP - i - 5) * mm)
             text.textLines(total_tax_list)
             self.pdf.drawText(text)
 
@@ -515,8 +516,8 @@ class CorrectingInvoice(SimpleInvoice):
         self._drawMain()
         self._drawTitle()
         self._drawProvider(self.TOP - 10, self.LEFT + 3)
-        self._drawClient(self.TOP - 39, self.LEFT + 91)
-        self._drawPayment(self.TOP - 47, self.LEFT + 3)
+        self._drawClient(self.TOP - 10, self.LEFT + 91)
+        # self._drawPayment(self.TOP - 47, self.LEFT + 3)
         self.drawCorretion(self.TOP - 73, self.LEFT)
         self._drawDates(self.TOP - 10, self.LEFT + 91)
         self._drawItems(self.TOP - 82, self.LEFT)
