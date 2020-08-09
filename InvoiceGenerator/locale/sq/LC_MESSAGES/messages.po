@@ -137,7 +137,7 @@ msgstr "Numri i Fatures: %s"
 
 #: pdf.py:404 pdf.py:465
 msgid "Due date"
-msgstr "Data de validade"
+msgstr "Data perfundimtare"
 
 #: pdf.py:406
 msgid "Taxable date"
